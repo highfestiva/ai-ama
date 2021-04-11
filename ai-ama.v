@@ -84,6 +84,9 @@ const (
 		'Who is Jerry Seinfeldt?'
 		'Who\'s the president of Canada?'
 		'How deep do oil-rig divers go?'
+		'When did the Tunguska meteor strike happen?'
+		'How high can the SR-71 fly?'
+		'When did the Sovjet submarine U-137 beach in Sweden?'
 	]
 
 	open_ai_api_key = os.read_file('.oai.key') or { panic('Missing OpenAI key file!') }
