@@ -1,6 +1,6 @@
 <html>
 <header>
-	<title>AI Answers</title>
+	<title>AI AMA</title>
 	@css 'static/index.css'
   <script>
     function digest(message) {
@@ -26,7 +26,7 @@
 </header>
 <body>
   <div class="focusbox">
-    <h1>AI Q&A</h1>
+    <h1>AI AMA</h1>
     <form method="POST" action="ask">
       <div class="inform">
         <p>@last_question</p>
@@ -35,7 +35,7 @@
         <input type="hidden" name="nounce" id="nounce"></input>
         <input type="hidden" name="hash" id="hash"></input>
         <input type="hidden" name="pre_questions" value="@pre_questions"></input>
-        <input class="qbox" type="text" name="question" value="@default_question" placeholder="@placeholder" autofocus></input>
+        <input class="qbox" type="text" name="question" placeholder="@placeholder" autofocus onfocus="this.value='@default_question';"></input>
         <input type="submit" value="Ask" onClick="handleForm(this.form, this);"></input>
       </div>
     </form>

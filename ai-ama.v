@@ -66,7 +66,7 @@ const (
 		'How far is it between New Deli and Bejing?'
 		'At what altitude do geo-stationary satellites fly?'
 		'What do cuckoos feed on?'
-		"What is Will Smith's most famous movie?"
+		'Which is Will Smiths most famous movie?'
 		'Name two Swedish figher jets.'
 		'Who built Coral Castle?'
 		'How many languages are spoken in Indonesia?'
@@ -141,7 +141,8 @@ fn (mut app App) ask() vweb.Result {
 	prompt := (req_params['pre_questions'] + req_params['question'] + '\nA: ').replace('\n', '\\n')
 	//println(prompt)
 	data := '{ "prompt": "${prompt}", "temperature": 0, "max_tokens": 150, "top_p": 1, "frequency_penalty": 0.0, "presence_penalty": 0.0, "stop": ["\\n"] }'
-	conf := http.FetchConfig{method: .post, data: data, headers: map{'Authorization':'Bearer '+open_ai_api_key, 'Content-Type': 'application/json'}}
+	header := http.new_header(http.HeaderConfig{http.CommonHeader.authorization, 'Bearer '+open_ai_api_key}, http.HeaderConfig{http.CommonHeader.content_type, 'application/json'})
+	conf := http.FetchConfig{method: .post, data: data, header: header}
 	resp := http.fetch('https://api.openai.com/v1/engines/davinci/completions', conf) or {
 		println('fetch error')
 		return app.server_error(400)
@@ -176,8 +177,9 @@ fn (mut app App) msg(msg string) vweb.Result {
 	pre_questions := 'Q: How many planets are in the solar system?\nA: Eight.\nQ: '
 	last_question := ''
 	last_answer := ''
-	default_question := 'How old is the sun?'
-	placeholder := util.sample_r(questions, 1)[0]
+	qs := util.sample_nr(questions, 2)
+	default_question := qs[0]
+	placeholder := qs[1]
 	return app.ans(pre_questions, last_question, last_answer, msg, default_question, placeholder)
 }
 
