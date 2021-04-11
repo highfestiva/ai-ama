@@ -1,6 +1,5 @@
 module main
 
-import crypto.sha256
 import json
 import math
 import net.http
@@ -63,16 +62,28 @@ const (
 		'What year was the Golden Gate Bridge built?'
 		'How tall is the Empire State Building?'
 		'How much does the Eiffel Tower weigh?'
-		'How far is it between New Deli and Bejing?'
+		'How far is the nearest star?'
+		'Which is the largest known star?'
+		'How long was the T-Rex?'
 		'At what altitude do geo-stationary satellites fly?'
 		'What do cuckoos feed on?'
-		'Which is Will Smiths most famous movie?'
+		'Which is Will Smith\'s most famous movie?'
 		'Name two Swedish figher jets.'
 		'Who built Coral Castle?'
 		'How many languages are spoken in Indonesia?'
-		'How many tribes live in the Amazon?'
 		'What is the life span of a panther?'
 		'Which is the nearest star?'
+		'How do you say \'good morning\' in Swedish?'
+		'How long time did Nelson Mandela spend in prison?'
+		'Who invented the airplane?'
+		'Which are smartest, cats or pigs?'
+		'How many eggs does an average eagle lay?'
+		'Which tree is the tallest?'
+		'How many people live in Mexico?'
+		'How many pounds to a kilo?'
+		'Who is Jerry Seinfeldt?'
+		'Who\'s the president of Canada?'
+		'How deep do oil-rig divers go?'
 	]
 
 	open_ai_api_key = os.read_file('.oai.key') or { panic('Missing OpenAI key file!') }
@@ -112,6 +123,16 @@ fn map_post(params string) map[string]string {
 	return m
 }
 
+fn hashish(i string) string {
+	mut hash := 0
+	for ch in i {
+		hash = ((hash<<5)-hash) + ch
+		hash &= 0xFFFFFFFF
+		//println('$ch $hash')
+	}
+	return hash.str()
+}
+
 pub fn (mut app App) init_once() {
 	app.serve_static('/favicon.ico', 'static/favicon.ico', 'img/x-icon')
 	app.serve_static('/static/ai.jpg', 'static/ai.jpg', 'image/jpeg')
@@ -125,6 +146,9 @@ pub fn (mut app App) index() vweb.Result {
 [post]
 fn (mut app App) ask() vweb.Result {
 	req_params := map_post(app.req.data)
+	if req_params['question'].len == 0 {
+		return app.msg('Enter a question.')
+	}
 	epoch := req_params['nounce']
 	now := time.utc().unix_time()
 	/*println(epoch)
@@ -134,8 +158,8 @@ fn (mut app App) ask() vweb.Result {
 	}
 	hash := req_params['hash']
 	/*println(hash)
-	println(sha256.hexhash(epoch))*/
-	if hash != sha256.hexhash(epoch) {
+	println(hashish(epoch))*/
+	if hash != hashish(epoch).str() {
 		return app.msg("Hackarroo!?!")
 	}
 	prompt := (req_params['pre_questions'] + req_params['question'] + '\nA: ').replace('\n', '\\n')
@@ -174,7 +198,7 @@ fn (mut app App) ok() vweb.Result {
 }
 
 fn (mut app App) msg(msg string) vweb.Result {
-	pre_questions := 'Q: How many planets are in the solar system?\nA: Eight.\nQ: '
+	pre_questions := 'Q: How many planets are in the solar system?\nA: The solar system contains eight planets.\nQ: When do dolphins become adults?\nA: When they are seven years old.\nQ: '
 	last_question := ''
 	last_answer := ''
 	qs := util.sample_nr(questions, 2)
