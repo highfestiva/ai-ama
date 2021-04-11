@@ -2,6 +2,27 @@
 <header>
 	<title>AI Answers</title>
 	@css 'static/index.css'
+  <script>
+    function digest(message) {
+      console.log(message);
+      const msgUint8 = new TextEncoder().encode(message);
+      return crypto.subtle.digest('SHA-256', msgUint8).then(function (hashBuffer) {
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        console.log(hashHex);
+        return hashHex;
+      });
+    }
+    function handleForm(form, btn) {
+      const epoch = Math.round(new Date().getTime() / 1000);
+      document.getElementById('nounce').value = epoch;
+      digest(''+epoch).then(hash => {
+        btn.disabled = true;
+        document.getElementById('hash').value = hash;
+        form.submit();
+      });
+    }
+  </script>
 </header>
 <body>
   <div class="focusbox">
@@ -10,9 +31,12 @@
       <div class="inform">
         <p>@last_question</p>
         <p>@last_answer</p>
-        <input type="hidden" name="pre_question" value="@pre_questions"></input>
-        <input class="qbox" type="text" name="question" value="@default_question" placeholder="Which were the gods in Norse mythology?"></input>
-        <input type="submit" value="Ask" onClick="this.form.submit(); this.disabled=true;"></input>
+        <p class="msg">@msg</p>
+        <input type="hidden" name="nounce" id="nounce"></input>
+        <input type="hidden" name="hash" id="hash"></input>
+        <input type="hidden" name="pre_questions" value="@pre_questions"></input>
+        <input class="qbox" type="text" name="question" value="@default_question" placeholder="@placeholder" autofocus></input>
+        <input type="submit" value="Ask" onClick="handleForm(this.form, this);"></input>
       </div>
     </form>
   </div>

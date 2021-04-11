@@ -27,12 +27,16 @@ h1 {
 	width: 29em;
 }
 
+.msg {
+	color: #a33;
+}
+
 .qbox {
 	width: 30em;
 }
 
 ::placeholder {
-  opacity: 0.3;
+  opacity: 0.7;
 }
 
 
