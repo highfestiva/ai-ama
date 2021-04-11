@@ -1,0 +1,59 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #47a;
+	background-color: #333;
+	background-image: url("ai.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+.focusbox {
+	background-color: #000;
+	opacity: 0.8;
+	margin: 8em;
+	padding: 2em;
+}
+
+h1 {
+	color: #69c;
+}
+
+.inform {
+	text-align: left;
+	margin: auto;
+	width: 29em;
+}
+
+.qbox {
+	width: 30em;
+}
+
+::placeholder {
+  opacity: 0.3;
+}
+
+
+@media only screen and (min-resolution: 2dppx) {
+
+body {
+	font-size: 2em;
+	font-weight: bold;
+}
+.focusbox {
+    margin: 1em;
+    padding: 0.5em;
+}
+input, input.qbox {
+    width: 90vw;
+}
+input {
+	font-size: 1em;
+	font-weight: bold;
+	height: 3em;
+	padding: 0.5em;
+}
+
+}

@@ -1,0 +1,20 @@
+<html>
+<header>
+	<title>AI Answers</title>
+	@css 'static/index.css'
+</header>
+<body>
+  <div class="focusbox">
+    <h1>AI Q&A</h1>
+    <form method="POST" action="ask">
+      <div class="inform">
+        <p>@last_question</p>
+        <p>@last_answer</p>
+        <input type="hidden" name="pre_question" value="@pre_questions"></input>
+        <input class="qbox" type="text" name="question" value="@default_question" placeholder="Which were the gods in Norse mythology?"></input>
+        <input type="submit" value="Ask" onClick="this.form.submit(); this.disabled=true;"></input>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
