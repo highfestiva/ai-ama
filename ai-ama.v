@@ -177,7 +177,7 @@ fn (mut app App) ask() vweb.Result {
 	if hash != hashish(epoch).str() {
 		return app.msg("Hackarroo!?!")
 	}
-	prompt := (req_params['pre_questions'] + req_params['question'] + '\nA: ').replace('\n', '\\n')
+	prompt := (req_params['pre_questions'] + req_params['question'] + '\nA: ').replace('\n', '\\n').replace('"', '\\"')
 	//println(prompt)
 	data := '{ "prompt": "${prompt}", "temperature": 0, "max_tokens": 150, "top_p": 1, "frequency_penalty": 0.0, "presence_penalty": 0.0, "stop": ["\\n"] }'
 	header := http.new_header(http.HeaderConfig{http.CommonHeader.authorization, 'Bearer '+open_ai_api_key}, http.HeaderConfig{http.CommonHeader.content_type, 'application/json'})
