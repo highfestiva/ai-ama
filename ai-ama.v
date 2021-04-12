@@ -54,6 +54,8 @@ const (
 		'%7D': '}'
 		'%7C': '|'
 		'%7E': '~'
+
+		' ': ' ' // nbsp
 	}
 
 	questions = [
@@ -68,7 +70,7 @@ const (
 		'At what altitude do geo-stationary satellites fly?'
 		'What do cuckoos feed on?'
 		'Which is Will Smith\'s most famous movie?'
-		'Name two Swedish figher jets.'
+		'Name two Swedish fighter jets.'
 		'Who built Coral Castle?'
 		'How many languages are spoken in Indonesia?'
 		'What is the life span of a panther?'
@@ -94,6 +96,9 @@ const (
 		'Is parenthood filled with constant cleaning?'
 		'How common is back pain?'
 		'In what part of the world is starvation most common?'
+		'Which country is the largest?'
+		'Can you do my homework?'
+		'How does circular economy work?'
 	]
 
 	open_ai_api_key = os.read_file('.oai.key') or { panic('Missing OpenAI key file!') }
