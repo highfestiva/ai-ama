@@ -1,14 +1,19 @@
 html,body {
 	font-family: Arial, Helvetica, sans-serif;
 	color: #47a;
-	background-color: #333;
-	background-image: url("ai.jpg");
-	background-repeat: no-repeat;
-	background-size: cover;
+	background-color: #020c27;
 	margin: 0;
 	padding: 0;
 	text-align: center;
 	width: 100%;
+}
+html {
+	background-image: url("ai.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+body {
+	background-color: transparent;
 }
 
 .focusbox {
