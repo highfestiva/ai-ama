@@ -11,67 +11,6 @@ import vweb
 const (
 	port = 8083
 
-	url_points = map{
-		'%0D': ''
-		'%0A': '\n'
-		'+': ' '
-
-		'%20': ' '
-		'%21': '!'
-		'%22': '"'
-		'%23': '#'
-		'%24': '$'
-		'%25': '%'
-		'%26': '&'
-		'%27': "'"
-		'%28': '('
-		'%29': ')'
-		'%2A': '*'
-		'%2B': '+'
-		'%2C': ','
-		'%2D': '-'
-		'%2E': '.'
-		'%2F': '/'
-
-		'%3A': ':'
-		'%3B': ';'
-		'%3C': '<'
-		'%3D': '='
-		'%3E': '>'
-		'%3F': '?'
-
-		'%40': '@'
-
-		'%5B': '['
-		'%5C': '\\'
-		'%5D': ']'
-		'%5E': '^'
-		'%5F': '_'
-
-		'%60': '‘'
-
-		'%7B': '{'
-		'%7D': '}'
-		'%7C': '|'
-		'%7E': '~'
-
-		'%92': '\''
-		'%93': '"'
-		'%94': '"'
-
-		'%B4': '\''
-		'%FC': 'ü'
-		'%DB': 'Ü'
-		'%E5': 'å'
-		'%C5': 'Å'
-		'%E4': 'ä'
-		'%C4': 'Ä'
-		'%F6': 'ö'
-		'%D6': 'Ö'
-		'‘': '\''
-		' ': ' ' // nbsp
-	}
-
 	questions = [
 		'How old is the sun?'
 		'When was the last ice age?'
@@ -134,12 +73,38 @@ fn main() {
 	vweb.run<App>(port)
 }
 
-fn unurl(s string) string {
-	mut t := s
-	for p,r in url_points {
-		t = t.replace(p, r)
+fn hexbin(b byte) byte {
+	if b >= byte(97) {
+		return b-97+10 // a-z
 	}
-	return t
+	if b >= byte(65) {
+		return b-65+10 // A-Z
+	}
+	return b-48 // 0-9
+}
+
+fn unurl(s string) string {
+	mut t := ''
+	mut enc := 0
+	mut ech := byte(0)
+	for b in s {
+		if b == `%` {
+			enc = 1
+		} else if enc > 0 {
+			ech = ech*16 + hexbin(b)
+			enc++
+			if enc > 2 {
+				t += ech.ascii_str()
+				ech = byte(0)
+				enc = 0
+			}
+		} else if b == `+` {
+			t += ' '
+		} else {
+			t += b.ascii_str()
+		}
+	}
+	return t.replace('\r', '')
 }
 
 fn map_post(params string) map[string]string {
@@ -176,6 +141,7 @@ pub fn (mut app App) index() vweb.Result {
 fn (mut app App) ask() vweb.Result {
 	//println(app.req.data)
 	req_params := map_post(app.req.data)
+	//println(req_params)
 	if req_params['question'].len == 0 {
 		return app.msg('Enter a question.')
 	}
@@ -195,6 +161,7 @@ fn (mut app App) ask() vweb.Result {
 	prompt := (req_params['pre_questions'] + req_params['question'] + '\nA: ').replace('\n', '\\n').replace('"', '\\"')
 	//println(prompt)
 	data := '{ "prompt": "${prompt}", "temperature": 0, "max_tokens": 150, "top_p": 1, "frequency_penalty": 0.0, "presence_penalty": 0.0, "stop": ["\\n"] }'
+	//println(data)
 	header := http.new_header(http.HeaderConfig{http.CommonHeader.authorization, 'Bearer '+open_ai_api_key}, http.HeaderConfig{http.CommonHeader.content_type, 'application/json'})
 	conf := http.FetchConfig{method: .post, data: data, header: header}
 	resp := http.fetch('https://api.openai.com/v1/engines/davinci/completions', conf) or {
@@ -214,7 +181,7 @@ fn (mut app App) ask() vweb.Result {
 	println(oai_answer.choices[0].text)*/
 	ans := unurl(oai_answer.choices[0].text[2..])
 	//println(ans)
-	pre_questions := (prompt + ans).replace('\\n', '\n') + '\nQ: '
+	pre_questions := (prompt + ans).replace('\\n', '\n').replace('\\"', '"') + '\nQ: '
 	last_question := 'Q: ' + req_params['question']
 	last_answer := 'A: ' + ans
 	println('$last_question   $last_answer')
