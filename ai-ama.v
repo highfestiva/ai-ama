@@ -55,9 +55,20 @@ const (
 		'%7C': '|'
 		'%7E': '~'
 
+		'%92': '\''
 		'%93': '"'
 		'%94': '"'
 
+		'%B4': '\''
+		'%FC': 'ü'
+		'%DB': 'Ü'
+		'%E5': 'å'
+		'%C5': 'Å'
+		'%E4': 'ä'
+		'%C4': 'Ä'
+		'%F6': 'ö'
+		'%D6': 'Ö'
+		'‘': '\''
 		' ': ' ' // nbsp
 	}
 
@@ -163,6 +174,7 @@ pub fn (mut app App) index() vweb.Result {
 
 [post]
 fn (mut app App) ask() vweb.Result {
+	//println(app.req.data)
 	req_params := map_post(app.req.data)
 	if req_params['question'].len == 0 {
 		return app.msg('Enter a question.')
