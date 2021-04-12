@@ -87,6 +87,13 @@ const (
 		'When did the Tunguska meteor strike happen?'
 		'How high can the SR-71 fly?'
 		'When did the Sovjet submarine U-137 beach in Sweden?'
+		'Was Jeffery Epstein a Mossad spy?'
+		'Was Charlie Chaplin a friend of Winston Churchill?'
+		'What does the theory of relativity say?'
+		'What did Henry Ford invent?'
+		'Is parenthood filled with constant cleaning?'
+		'How common is back pain?'
+		'In what part of the world is starvation most common?'
 	]
 
 	open_ai_api_key = os.read_file('.oai.key') or { panic('Missing OpenAI key file!') }
